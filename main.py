@@ -1631,7 +1631,7 @@ def render_html_content(
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Evil Dragon</title>
+        <title> Demon Dragon</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <style>
             * { box-sizing: border-box; }
@@ -1658,7 +1658,7 @@ def render_html_content(
             }
             
             .header {
-                background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+                ackground: linear-gradient(135deg, #4c68e9 0%, #eb7535 100%);
                 color: white;
                 padding: 32px 24px;
                 text-align: center;
@@ -2341,7 +2341,7 @@ def render_html_content(
                     <button class="save-btn" onclick="saveAsImage()">Save as Image</button>
                     <button class="save-btn" onclick="saveAsMultipleImages()">Save as Multiple Images</button>
                 </div>
-                <div class="header-title">Evil Dragon</div>
+                <div class="header-title">Demon Dragon</div>
                 <div class="header-info">
                     <div class="info-item">
                         <span class="info-label">Report Type</span>
