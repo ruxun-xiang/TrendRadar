@@ -528,7 +528,7 @@ class DataFetcher:
             if i < len(ids_list) - 1:
                 actual_interval = request_interval + random.randint(-10, 20)
                 actual_interval = max(50, actual_interval)
-                time.sleep(actual_interval / 1000)
+                time.sleep(actual_interval / 500)
 
         print(f"成功: {list(results.keys())}, 失败: {failed_ids}")
         return results, id_to_name, failed_ids
@@ -1631,10 +1631,14 @@ def render_html_content(
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>热点新闻分析</title>
+        <title>Evil Dragon</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <style>
             * { box-sizing: border-box; }
+            html {
+                scroll-behavior: smooth;
+                scroll-padding-top: 20px;
+            }
             body { 
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
                 margin: 0; 
@@ -1645,11 +1649,11 @@ def render_html_content(
             }
             
             .container {
-                max-width: 600px;
+                max-width: 1400px;
                 margin: 0 auto;
                 background: white;
                 border-radius: 12px;
-                overflow: hidden;
+                overflow: visible;
                 box-shadow: 0 2px 16px rgba(0,0,0,0.06);
             }
             
@@ -1659,6 +1663,8 @@ def render_html_content(
                 padding: 32px 24px;
                 text-align: center;
                 position: relative;
+                border-radius: 12px 12px 0 0;
+                overflow: hidden;
             }
             
             .save-buttons {
@@ -1730,10 +1736,166 @@ def render_html_content(
             
             .content {
                 padding: 24px;
+                display: flex;
+                gap: 24px;
+                align-items: flex-start;
+            }
+            
+            .nav-section {
+                background: white;
+                border-radius: 8px;
+                padding: 16px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                border: 1px solid #e5e7eb;
+                position: sticky;
+                top: 24px;
+                z-index: 100;
+                backdrop-filter: blur(10px);
+                background: rgba(255, 255, 255, 0.98);
+                transition: all 0.3s ease;
+                width: 280px;
+                flex-shrink: 0;
+                max-height: calc(100vh - 48px);
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+            
+            .nav-section::-webkit-scrollbar {
+                width: 6px;
+            }
+            
+            .nav-section::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 3px;
+            }
+            
+            .nav-section::-webkit-scrollbar-thumb {
+                background: #c0c0c0;
+                border-radius: 3px;
+            }
+            
+            .nav-section::-webkit-scrollbar-thumb:hover {
+                background: #a0a0a0;
+            }
+            
+            .nav-section.scrolled {
+                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            }
+            
+            .content-wrapper {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .nav-title {
+                font-size: 15px;
+                font-weight: 600;
+                color: #1a1a1a;
+                margin: 0 0 12px 0;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding-bottom: 12px;
+                border-bottom: 2px solid #e5e7eb;
+            }
+            
+            .nav-title::before {
+                content: "📑";
+                font-size: 16px;
+            }
+            
+            .nav-links {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+            
+            .nav-link {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 12px;
+                background: #f8f9fa;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                text-decoration: none;
+                color: #374151;
+                font-size: 13px;
+                transition: all 0.2s ease;
+                cursor: pointer;
+                width: 100%;
+            }
+            
+            .nav-link:hover {
+                background: #4f46e5;
+                color: white;
+                border-color: #4f46e5;
+                transform: translateX(4px);
+                box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+            }
+            
+            .nav-link-icon {
+                font-size: 16px;
+            }
+            
+            .nav-link-text {
+                flex: 1;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .nav-link-count {
+                background: #e5e7eb;
+                color: #6b7280;
+                padding: 2px 8px;
+                border-radius: 10px;
+                font-size: 12px;
+                font-weight: 600;
+                min-width: 28px;
+                text-align: center;
+            }
+            
+            .nav-link:hover .nav-link-count {
+                background: rgba(255, 255, 255, 0.3);
+                color: white;
+            }
+            
+            .content-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+                align-items: start;
             }
             
             .word-group {
-                margin-bottom: 40px;
+                margin-bottom: 0;
+                break-inside: avoid;
+                max-height: 1000px;
+                overflow-y: auto;
+                border: 1px solid #f0f0f0;
+                border-radius: 8px;
+                padding: 0;
+                background: #fafafa;
+                scroll-behavior: smooth;
+            }
+            
+            .word-group::-webkit-scrollbar {
+                width: 8px;
+            }
+            
+            .word-group::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 4px;
+            }
+            
+            .word-group::-webkit-scrollbar-thumb {
+                background: #c0c0c0;
+                border-radius: 4px;
+            }
+            
+            .word-group::-webkit-scrollbar-thumb:hover {
+                background: #a0a0a0;
             }
             
             .word-group:first-child {
@@ -1744,9 +1906,14 @@ def render_html_content(
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                margin-bottom: 20px;
-                padding-bottom: 8px;
-                border-bottom: 1px solid #f0f0f0;
+                padding: 20px 20px 16px 20px;
+                border-bottom: 2px solid #e0e0e0;
+                position: sticky;
+                top: 0;
+                background: #fafafa;
+                z-index: 10;
+                margin: 0;
+                border-radius: 8px 8px 0 0;
             }
             
             .word-info {
@@ -1776,17 +1943,24 @@ def render_html_content(
             }
             
             .news-item {
-                margin-bottom: 20px;
-                padding: 16px 0;
-                border-bottom: 1px solid #f5f5f5;
+                margin: 0 20px 16px 20px;
+                padding: 16px;
+                border-bottom: none;
+                background: white;
+                border-radius: 8px;
                 position: relative;
                 display: flex;
                 gap: 12px;
                 align-items: center;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            }
+            
+            .news-item:first-of-type {
+                margin-top: 20px;
             }
             
             .news-item:last-child {
-                border-bottom: none;
+                margin-bottom: 20px;
             }
             
             .news-item.new::after {
@@ -1894,6 +2068,7 @@ def render_html_content(
                 margin-top: 40px;
                 padding-top: 24px;
                 border-top: 2px solid #f0f0f0;
+                grid-column: 1 / -1;
             }
             
             .new-section-title {
@@ -1977,6 +2152,7 @@ def render_html_content(
                 border-radius: 8px;
                 padding: 16px;
                 margin-bottom: 24px;
+                grid-column: 1 / -1;
             }
             
             .error-title {
@@ -2005,6 +2181,7 @@ def render_html_content(
                 background: #f8f9fa;
                 border-top: 1px solid #e5e7eb;
                 text-align: center;
+                border-radius: 0 0 12px 12px;
             }
             
             .footer-content {
@@ -2030,17 +2207,118 @@ def render_html_content(
                 color: #374151;
             }
             
+            @media (max-width: 1024px) {
+                .content {
+                    flex-direction: column;
+                    gap: 20px;
+                }
+                .nav-section {
+                    width: 100%;
+                    max-height: 400px;
+                    position: sticky;
+                    top: 16px;
+                }
+                .nav-links {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                    gap: 8px;
+                }
+                .content-wrapper {
+                    width: 100%;
+                }
+                .content-grid {
+                    grid-template-columns: 1fr;
+                    gap: 32px;
+                }
+            }
+            
+            @media (max-width: 768px) {
+                .content-grid {
+                    grid-template-columns: 1fr;
+                    gap: 32px;
+                }
+                .nav-section {
+                    top: 12px;
+                    padding: 16px;
+                    max-height: 300px;
+                }
+                .nav-links {
+                    grid-template-columns: 1fr;
+                }
+                .word-group {
+                    margin-bottom: 0;
+                    max-height: none;
+                    overflow-y: visible;
+                    border: none;
+                    padding: 0;
+                    background: transparent;
+                }
+                .word-header {
+                    position: static;
+                    margin: 0 0 20px 0;
+                    padding: 0 0 12px 0;
+                    border-bottom: 1px solid #f0f0f0;
+                }
+                .news-item {
+                    background: white;
+                    border-radius: 8px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+                }
+            }
+            
             @media (max-width: 480px) {
                 body { padding: 12px; }
                 .header { padding: 24px 20px; }
-                .content { padding: 20px; }
+                .content { 
+                    padding: 20px;
+                }
+                .content-grid { 
+                    grid-template-columns: 1fr;
+                    gap: 32px;
+                }
+                .nav-section {
+                    padding: 14px;
+                    top: 8px;
+                    margin-bottom: 16px;
+                    border-radius: 6px;
+                }
+                .nav-title {
+                    font-size: 14px;
+                    margin-bottom: 12px;
+                }
+                .nav-links {
+                    grid-template-columns: 1fr;
+                    gap: 6px;
+                }
+                .nav-link {
+                    padding: 8px 12px;
+                    font-size: 13px;
+                }
                 .footer { padding: 16px 20px; }
                 .header-info { grid-template-columns: 1fr; gap: 12px; }
                 .news-header { gap: 6px; }
                 .news-content { padding-right: 45px; }
-                .news-item { gap: 8px; }
+                .news-item { 
+                    gap: 8px;
+                    padding: 12px;
+                    margin-bottom: 12px;
+                }
                 .new-item { gap: 8px; }
                 .news-number { width: 20px; height: 20px; font-size: 12px; }
+                .word-group {
+                    margin-bottom: 0;
+                    max-height: none;
+                    overflow-y: visible;
+                    border: none;
+                    padding: 0;
+                    background: transparent;
+                }
+                .word-header {
+                    position: static;
+                    margin: 0 0 16px 0;
+                    padding: 0 0 8px 0;
+                    border-bottom: 1px solid #f0f0f0;
+                }
                 .save-buttons {
                     position: static;
                     margin-bottom: 16px;
@@ -2060,33 +2338,33 @@ def render_html_content(
         <div class="container">
             <div class="header">
                 <div class="save-buttons">
-                    <button class="save-btn" onclick="saveAsImage()">保存为图片</button>
-                    <button class="save-btn" onclick="saveAsMultipleImages()">分段保存</button>
+                    <button class="save-btn" onclick="saveAsImage()">Save as Image</button>
+                    <button class="save-btn" onclick="saveAsMultipleImages()">Save as Multiple Images</button>
                 </div>
-                <div class="header-title">热点新闻分析</div>
+                <div class="header-title">Evil Dragon</div>
                 <div class="header-info">
                     <div class="info-item">
-                        <span class="info-label">报告类型</span>
+                        <span class="info-label">Report Type</span>
                         <span class="info-value">"""
 
     # 处理报告类型显示
     if is_daily_summary:
         if mode == "current":
-            html += "当前榜单"
+            html += "Current Rank"
         elif mode == "incremental":
-            html += "增量模式"
+            html += "Incremental Mode"
         else:
-            html += "当日汇总"
+            html += "Daily Summary"
     else:
-        html += "实时分析"
+        html += "Real-time Analysis"
 
     html += """</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">新闻总数</span>
+                        <span class="info-label">Total News</span>
                         <span class="info-value">"""
 
-    html += f"{total_titles} 条"
+    html += f"{total_titles} news"
 
     # 计算筛选后的热点新闻数量
     hot_news_count = sum(len(stat["titles"]) for stat in report_data["stats"])
@@ -2094,15 +2372,15 @@ def render_html_content(
     html += """</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">热点新闻</span>
+                        <span class="info-label">Hot News</span>
                         <span class="info-value">"""
 
-    html += f"{hot_news_count} 条"
+    html += f"{hot_news_count} news"
 
     html += """</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">生成时间</span>
+                        <span class="info-label">Generated Time</span>
                         <span class="info-value">"""
 
     now = get_beijing_time()
@@ -2114,6 +2392,41 @@ def render_html_content(
             </div>
             
             <div class="content">"""
+
+    # 添加导航部分
+    if report_data["stats"]:
+        html += """
+                <div class="nav-section">
+                    <div class="nav-title">Quick Navigation</div>
+                    <div class="nav-links">"""
+        
+        for i, stat in enumerate(report_data["stats"], 1):
+            count = stat["count"]
+            escaped_word = html_escape(stat["word"])
+            
+            # 选择合适的图标
+            if count >= 10:
+                icon = "🔥"
+            elif count >= 5:
+                icon = "📈"
+            else:
+                icon = "📌"
+            
+            html += f"""
+                        <a href="#section-{i}" class="nav-link">
+                            <span class="nav-link-icon">{icon}</span>
+                            <span class="nav-link-text">{escaped_word}</span>
+                            <span class="nav-link-count">{count}</span>
+                        </a>"""
+        
+        html += """
+                    </div>
+                </div>"""
+
+    # 开始内容包装器和网格
+    html += """
+                <div class="content-wrapper">
+                    <div class="content-grid">"""
 
     # 处理失败ID错误信息
     if report_data["failed_ids"]:
@@ -2145,11 +2458,11 @@ def render_html_content(
             escaped_word = html_escape(stat["word"])
 
             html += f"""
-                <div class="word-group">
+                <div class="word-group" id="section-{i}">
                     <div class="word-header">
                         <div class="word-info">
                             <div class="word-name">{escaped_word}</div>
-                            <div class="word-count {count_class}">{count} 条</div>
+                            <div class="word-count {count_class}">{count} news</div>
                         </div>
                         <div class="word-index">{i}/{total_count}</div>
                     </div>"""
@@ -2232,7 +2545,7 @@ def render_html_content(
     if report_data["new_titles"]:
         html += f"""
                 <div class="new-section">
-                    <div class="new-section-title">本次新增热点 (共 {report_data['total_new_count']} 条)</div>"""
+                    <div class="new-section-title">New Hot News (共 {report_data['total_new_count']} news)</div>"""
 
         for source_data in report_data["new_titles"]:
             escaped_source = html_escape(source_data["source_name"])
@@ -2240,7 +2553,7 @@ def render_html_content(
 
             html += f"""
                     <div class="new-source-group">
-                        <div class="new-source-title">{escaped_source} · {titles_count}条</div>"""
+                        <div class="new-source-title">{escaped_source} · {titles_count} news</div>"""
 
             # 为新增新闻也添加序号
             for idx, title_data in enumerate(source_data["titles"], 1):
@@ -2290,15 +2603,17 @@ def render_html_content(
         html += """
                 </div>"""
 
+    # 关闭 content-grid 和 content-wrapper
+    html += """
+                    </div>
+                </div>"""
+
     html += """
             </div>
             
             <div class="footer">
                 <div class="footer-content">
-                    由 <span class="project-name">TrendRadar</span> 生成 · 
-                    <a href="https://github.com/sansan0/TrendRadar" target="_blank" class="footer-link">
-                        GitHub 开源项目
-                    </a>"""
+            """
 
     if update_info:
         html += f"""
@@ -2318,7 +2633,7 @@ def render_html_content(
                 const originalText = button.textContent;
                 
                 try {
-                    button.textContent = '生成中...';
+                    button.textContent = 'Generating...';
                     button.disabled = true;
                     window.scrollTo(0, 0);
                     
@@ -2367,7 +2682,7 @@ def render_html_content(
                     link.click();
                     document.body.removeChild(link);
                     
-                    button.textContent = '保存成功!';
+                    button.textContent = 'Save Success!';
                     setTimeout(() => {
                         button.textContent = originalText;
                         button.disabled = false;
@@ -2376,7 +2691,7 @@ def render_html_content(
                 } catch (error) {
                     const buttons = document.querySelector('.save-buttons');
                     buttons.style.visibility = 'visible';
-                    button.textContent = '保存失败';
+                    button.textContent = 'Save Failed';
                     setTimeout(() => {
                         button.textContent = originalText;
                         button.disabled = false;
@@ -2392,7 +2707,7 @@ def render_html_content(
                 const maxHeight = 5000 / scale;
                 
                 try {
-                    button.textContent = '分析中...';
+                    button.textContent = 'Analyzing...';
                     button.disabled = true;
                     
                     // 获取所有可能的分割元素
@@ -2518,7 +2833,7 @@ def render_html_content(
                         segments.push(currentSegment);
                     }
                     
-                    button.textContent = `生成中 (0/${segments.length})...`;
+                    button.textContent = `Generating (0/${segments.length})...`;
                     
                     // 隐藏保存按钮
                     const buttons = document.querySelector('.save-buttons');
@@ -2528,7 +2843,7 @@ def render_html_content(
                     const images = [];
                     for (let i = 0; i < segments.length; i++) {
                         const segment = segments[i];
-                        button.textContent = `生成中 (${i + 1}/${segments.length})...`;
+                        button.textContent = `Generating (${i + 1}/${segments.length})...`;
                         
                         // 创建临时容器用于截图
                         const tempContainer = document.createElement('div');
@@ -2597,17 +2912,17 @@ def render_html_content(
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
                     
-                    button.textContent = `已保存 ${segments.length} 张图片!`;
+                    button.textContent = `Saved ${segments.length} images!`;
                     setTimeout(() => {
                         button.textContent = originalText;
                         button.disabled = false;
                     }, 2000);
                     
                 } catch (error) {
-                    console.error('分段保存失败:', error);
+                    console.error('Save Failed:', error);
                     const buttons = document.querySelector('.save-buttons');
                     buttons.style.visibility = 'visible';
-                    button.textContent = '保存失败';
+                    button.textContent = 'Save Failed';
                     setTimeout(() => {
                         button.textContent = originalText;
                         button.disabled = false;
@@ -2617,6 +2932,26 @@ def render_html_content(
             
             document.addEventListener('DOMContentLoaded', function() {
                 window.scrollTo(0, 0);
+                
+                // Enhanced shadow effect when navigation is scrolled
+                const navSection = document.querySelector('.nav-section');
+                if (navSection) {
+                    let ticking = false;
+                    
+                    window.addEventListener('scroll', function() {
+                        if (!ticking) {
+                            window.requestAnimationFrame(function() {
+                                if (window.scrollY > 50) {
+                                    navSection.classList.add('scrolled');
+                                } else {
+                                    navSection.classList.remove('scrolled');
+                                }
+                                ticking = false;
+                            });
+                            ticking = true;
+                        }
+                    });
+                }
             });
         </script>
     </body>
